@@ -176,10 +176,8 @@ def runModels(xtrain, xtest, ytrain, ytest, inmodel):
         return runXGB(xtrain, xtest, ytrain, ytest)
 
 
-def runTraining(x, y, ranstate, model):
+def runTraining(x, y, ranstate, model, refit):
     xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.25, random_state=ranstate)
-
-    refit = " "
 
     if refit == "SMOTE":
         smote = SMOTE(sampling_strategy=0.1, random_state=ranstate)
@@ -200,12 +198,13 @@ def runTraining(x, y, ranstate, model):
 def main():
     x, y = cleanData()
     models = ['dt', 'lr', 'svm', 'rf', 'xgb']
+    refit = input("Data resampling model: ")
     model_stats = []
     for model in models:
         weighted_averages = []
         print(model)
         for ranstate in range(1, 26):
-            weighted_averages.append(runTraining(x, y, ranstate, model))
+            weighted_averages.append(runTraining(x, y, ranstate, model, refit))
             print(ranstate)
 
         buildBoxPlot(weighted_averages, model)
